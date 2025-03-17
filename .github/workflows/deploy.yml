@@ -1,0 +1,41 @@
+name: Deploy to GitHub Pages
+
+on:
+  # main 브랜치에 푸시될 때마다 워크플로우 실행
+  push:
+    branches: [ main ]
+  # 수동으로 실행 가능
+  workflow_dispatch:
+
+# 동시 빌드 방지
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # 전체 히스토리 가져오기 (lastModified 기능 지원)
+
+      - name: Node.js 설정
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: 의존성 설치
+        run: npm ci
+
+      - name: 빌드
+        run: npm run build
+
+      - name: GitHub Pages에 배포
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist # Astro 기본 빌드 출력 디렉토리
+          branch: gh-pages
+          clean: true # 배포 전 기존 파일 정리
