@@ -1,3 +1,3 @@
 # Mnngy blog
 
-hello, this is my blog link. [mnngy blog](https://mnngy.com)
+hello, this is my blog link. [mnngy blog](https://miningyu.github.io)
