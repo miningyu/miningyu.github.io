@@ -7,13 +7,19 @@ on:
   # 수동으로 실행 가능
   workflow_dispatch:
 
+# GITHUB_TOKEN 권한 설정
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 # 동시 빌드 방지
 concurrency:
   group: pages-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: 저장소 체크아웃
@@ -33,9 +39,18 @@ jobs:
       - name: 빌드
         run: npm run build
 
-      - name: GitHub Pages에 배포
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Pages 아티팩트 업로드
+        uses: actions/upload-pages-artifact@v3
         with:
-          folder: dist # Astro 기본 빌드 출력 디렉토리
-          branch: gh-pages
-          clean: true # 배포 전 기존 파일 정리
+          path: dist # Astro 기본 빌드 출력 디렉토리
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: GitHub Pages에 배포
+        id: deployment
+        uses: actions/deploy-pages@v4
