@@ -5,7 +5,7 @@ import { defineConfig } from './src/helpers/config-helper';
 
 export default defineConfig({
   lang: 'en-US',
-  site: 'https://slate-blog-demo.vercel.app',
+  site: 'https://miningyu.github.io',
   avatar: '/avatar.png',
   title: 'Mnngy Blog',
   description: '안녕하세요. Mnngy의 블로그입니다. 웹 개발에 관심이 있습니다. 😌',
